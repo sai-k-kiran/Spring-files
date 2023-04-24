@@ -15,15 +15,18 @@ public class ContextApplication {
 				new AnnotationConfigApplicationContext(ProjectConfig.class);
 
 		ProductDeliveryService service = context.getBean(ProductDeliveryService.class);
-		service.addProduct();
+//		service.addProduct();
+//
+//		Owner man = context.getBean(Owner.class);
+//
+//		Cat cat = context.getBean("cat", Cat.class);
+//
+//		//cat.setName("Hammy");
+//		System.out.println(man);
+//		System.out.println(cat);
 
-		Owner man = context.getBean(Owner.class);
+		service.addOneProduct();
 
-		Cat cat = context.getBean("cat", Cat.class);
-
-		//cat.setName("Hammy");
-		System.out.println(man);
-		System.out.println(cat);
 	}
 
 }
