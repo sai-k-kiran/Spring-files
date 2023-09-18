@@ -2,6 +2,7 @@ package com.project;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +16,14 @@ public class Main {
 //        CustomerService custService = new CustomerService(new CustomerDAOService());
 //        CustomerController cusController = new CustomerController(custService);
 //        Never do it like this
+        ConfigurableApplicationContext applicationContext =  // to get the beans from app context
+                SpringApplication.run(Main.class, args);
 
-        SpringApplication.run(Main.class, args);
+        String[] beans = applicationContext.getBeanDefinitionNames(); // returns beans name as a string[]
+
+        for(String bean : beans) {
+            System.out.println(bean);
+        }
     }
 
     @GetMapping("/greet")
