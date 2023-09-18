@@ -1,9 +1,12 @@
-package customer;
+package com.project.customer;
+
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class CustomerDAOService implements CustomerDAO{
     private static final List<Customer> customers;
 

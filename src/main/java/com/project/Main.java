@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -11,6 +12,10 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
+//        CustomerService custService = new CustomerService(new CustomerDAOService());
+//        CustomerController cusController = new CustomerController(custService);
+//        Never do it like this
+
         SpringApplication.run(Main.class, args);
     }
 
@@ -29,10 +34,6 @@ public class Main {
 
     record Person(String name, int age, String occ){}
     record GreetResponse(String res, List<String> langs, Person person){}
-
-    //---------------lesson 42-----------------------------------------------
-
-
 }
 
 // @RequestParam("name") is for the URL params.

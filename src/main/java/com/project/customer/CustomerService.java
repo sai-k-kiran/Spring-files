@@ -1,7 +1,9 @@
-package customer;  // BUSINESS LAYER
+package com.project.customer;  // BUSINESS LAYER
 
+import org.springframework.stereotype.Service;
 import java.util.List;
 
+@Service // creating a 'service' type bean, go to customerController.java
 public class CustomerService {
     private final CustomerDAO customerDAO;
 

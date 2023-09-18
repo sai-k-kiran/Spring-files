@@ -1,4 +1,5 @@
-package customer;  // DAO LAYER
+package com.project.customer;  // DAO LAYER
+
 
 import java.util.List;
 import java.util.Optional;

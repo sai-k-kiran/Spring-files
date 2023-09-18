@@ -1,4 +1,4 @@
-package customer;
+package com.project.customer;
 
 public class Customer{
     private Integer id, age;

@@ -1,4 +1,4 @@
-package customer;   // API LAYER
+package com.project.customer;   // API LAYER
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,7 +8,7 @@ import java.util.List;
 @RestController
 public class CustomerController {
     private final CustomerService customerService;
-
+    // spring is taking CustomerService bean which we have defined in 'CustomerService.java'
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
