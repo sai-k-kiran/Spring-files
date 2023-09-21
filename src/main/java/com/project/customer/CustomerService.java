@@ -1,5 +1,6 @@
 package com.project.customer;  // BUSINESS LAYER
 
+import com.project.Exception.ResourceNotFound;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -17,6 +18,6 @@ public class CustomerService {
 
     public Customer getCustomerById(Integer custId){
         return customerDAO.selectCustomerById(custId)
-                .orElseThrow(() -> new IllegalArgumentException("customer %s not found".formatted(custId)));
+                .orElseThrow(() -> new ResourceNotFound("customer %s not found".formatted(custId)));
     }
 }
