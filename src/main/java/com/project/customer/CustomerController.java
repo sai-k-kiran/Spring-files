@@ -26,4 +26,4 @@ public class CustomerController {
     }
 }
 
-// CustomerController -> CustomerService -> CustomerDAO -> CustomerDAOService -> CUstomer
+// CustomerController -> CustomerService -> CustomerDAO -> CustomerDAOService -> Customer

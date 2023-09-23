@@ -1,5 +1,8 @@
 package com.project;
 
+import com.project.customer.Customer;
+import com.project.customer.CustomerRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -22,8 +26,19 @@ public class Main {
 //                SpringApplication.run(Main.class, args);
 
 //        printBeans(applicationContext);
-
         SpringApplication.run(Main.class, args);
+    }
+
+    @Bean
+    CommandLineRunner runner(CustomerRepository customerRepository){
+        return args -> {
+
+            Customer c1 = new Customer(21, "Alex", "alex@gmail.com");
+            Customer c2 = new Customer(22, "Tom", "tom@gmail.com");
+
+            List<Customer> customers = List.of(c1, c2);
+            customerRepository.saveAll(customers);
+        };
     }
 
     public static void printBeans(ConfigurableApplicationContext ctx){
