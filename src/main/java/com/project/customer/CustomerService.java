@@ -1,5 +1,6 @@
 package com.project.customer;  // BUSINESS LAYER
 
+import com.project.Exception.DuplicateResource;
 import com.project.Exception.ResourceNotFound;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -20,5 +21,12 @@ public class CustomerService {
     public Customer getCustomerById(Integer custId){
         return customerDAO.selectCustomerById(custId)
                 .orElseThrow(() -> new ResourceNotFound("customer %s not found".formatted(custId)));
+    }
+
+    public void addCustomer(CustomerRegistrationRequest regRequest){
+        if(customerDAO.emailExists(regRequest.email()))
+            throw new DuplicateResource("Customer with %s already exists".formatted(regRequest.email()));
+
+        customerDAO.insertCustomer(new Customer(regRequest.age(), regRequest.name(), regRequest.email()));
     }
 }

@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface CustomerDAO {
     public List<Customer> selectAllCustomers();
     public Optional<Customer> selectCustomerById(Integer custId);
+    void insertCustomer(Customer customer);
+    boolean emailExists(String email);
 }
