@@ -28,10 +28,30 @@ public class CustomerListDAOService implements CustomerDAO{
                 .filter(c -> c.getId().equals(custId))
                 .findFirst();
     }
+    @Override
+    public void insertCustomer(Customer customer){
+        customers.add(customer);
+    }
 
     @Override
     public boolean emailExists(String email){
         return customers.stream()
                 .anyMatch(c -> c.getEmail().equals(email));
+    }
+    @Override
+    public void deleteCustomerById(Integer custId){
+        customers.stream()
+                .filter(c -> c.getId().equals(custId))
+                .findFirst()
+                .ifPresent(c -> customers.remove(c));
+    }
+    @Override
+    public boolean idExists(Integer custId){
+        return customers.stream()
+                .anyMatch(c -> c.getId().equals(custId));
+    }
+    @Override
+    public void updateCustomer(Customer customer){
+        customers.add(customer);
     }
 }

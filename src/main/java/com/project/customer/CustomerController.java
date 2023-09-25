@@ -1,12 +1,12 @@
 package com.project.customer;   // API LAYER
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
+@RequestMapping("api/v1/customers")
 public class CustomerController {
     private final CustomerService customerService;
     // spring is taking CustomerService bean which we have defined in 'CustomerService.java'
@@ -15,14 +15,29 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping("api/v1/customers")
+    @GetMapping
     public List<Customer> getCustomers(){
         return customerService.getAllCustomers();
     }
 
-    @GetMapping("api/v1/customers/{custId}") // returns customer with id = custId
+    @GetMapping("{custId}") // returns customer with id = custId
     public Customer getCustomers(@PathVariable("custId") Integer custId){
         return customerService.getCustomerById(custId);
+    }
+
+    @PostMapping
+    public void registerCustomer(@RequestBody CustomerRegistrationRequest request){
+            customerService.addCustomer(request);
+    }
+    @DeleteMapping("{custId}")
+    public void deleteCustomer(@PathVariable("custId") Integer custId){
+        customerService.deleteCustomerById(custId);
+    }
+
+    @PutMapping("{custId}")
+    public void updateCustomer(
+            @PathVariable("custId") Integer custId, @RequestBody CustomerUpdateRequest request){
+        customerService.updateCustomer(custId, request);
     }
 }
 
