@@ -37,8 +37,10 @@ public class Main {
             Customer c2 = new Customer(22, "Tom", "tom@gmail.com");
 
             List<Customer> customers = List.of(c1, c2);
-//            customerRepository.saveAll(customers);
+            //customerRepository.saveAll(customers);
         };
+
+
     }
 
     public static void printBeans(ConfigurableApplicationContext ctx){
