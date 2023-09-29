@@ -2,6 +2,7 @@ package com.project;
 
 import com.project.customer.Customer;
 import com.project.customer.CustomerRepository;
+import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SpringBootApplication
 public class Main {
@@ -32,12 +34,15 @@ public class Main {
     @Bean
     CommandLineRunner runner(CustomerRepository customerRepository){
         return args -> {
+            Faker faker = new Faker();
+            Random rand = new Random();
+            String name = faker.name().fullName();
 
-            Customer c1 = new Customer(21, "Alex", "alex@gmail.com");
-            Customer c2 = new Customer(22, "Tom", "tom@gmail.com");
+            Customer c1 = new Customer(rand.nextInt(16, 99),
+                    name,
+                    name.replaceAll(" ", "_").toLowerCase() + "@gmail.com");
 
-            List<Customer> customers = List.of(c1, c2);
-            //customerRepository.saveAll(customers);
+            customerRepository.save(c1);
         };
 
 
