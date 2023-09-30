@@ -63,6 +63,6 @@ public class CustomerService {
 
         if(!changes) throw new ResourceValidationException("No changes found");
 
-        customerDAO.insertCustomer(c);
+        customerDAO.updateCustomer(c);
     }
 }
