@@ -21,7 +21,7 @@ public class CustomerService {
 
     public Customer getCustomerById(Integer custId){
         return customerDAO.selectCustomerById(custId)
-                .orElseThrow(() -> new ResourceNotFound("customer %s not found".formatted(custId)));
+                .orElseThrow(() -> new ResourceNotFound("Customer with [%s] not found".formatted(custId)));
     }
 
     public void addCustomer(CustomerRegistrationRequest regRequest){
