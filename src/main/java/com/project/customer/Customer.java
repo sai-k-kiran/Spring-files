@@ -3,6 +3,7 @@ package com.project.customer;
 import jakarta.persistence.*;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
 @Entity
 @Table(
@@ -90,5 +91,18 @@ public class Customer{
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {  // NOTE 1, this is IMP for test. (Assertions)
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return id.equals(customer.id) && age.equals(customer.age) && name.equals(customer.name) && email.equals(customer.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, age, name, email);
     }
 }

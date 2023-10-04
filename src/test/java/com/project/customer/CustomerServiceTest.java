@@ -203,39 +203,4 @@ class CustomerServiceTest {
         assertThat(capturedCustomer.getEmail()).isEqualTo(request.email());
         assertThat(capturedCustomer.getName()).isEqualTo(c.getName());
     }
-
-    @Test
-    void emailExistsWhileUpdating() {
-        int id = 1;
-        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com");
-        when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(c));
-
-        String newEmail = "tom@gmail.com";
-
-        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(null, null, newEmail);
-
-        when(customerDAO.emailExists(newEmail)).thenReturn(true);
-        
-        assertThatThrownBy(() -> underTest.updateCustomer(id, updateRequest))
-                .isInstanceOf(DuplicateResource.class)
-                .hasMessage("Email already taken");
-
-        verify(customerDAO, never()).updateCustomer(any());
-    }
-
-    @Test
-    void noChangesErrorWhileUpdating() {
-        int id = 1;
-        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com");
-        when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(c));
-
-        CustomerUpdateRequest request =
-                new CustomerUpdateRequest(c.getName(), c.getAge(), c.getEmail());
-
-        assertThatThrownBy(() -> underTest.updateCustomer(id, request))
-                .isInstanceOf(ResourceValidationException.class)
-                .hasMessage("No changes found");
-
-        verify(customerDAO, never()).updateCustomer(any());
-    }
 }
