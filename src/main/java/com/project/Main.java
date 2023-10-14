@@ -2,6 +2,7 @@ package com.project;
 
 import com.project.customer.Customer;
 import com.project.customer.CustomerRepository;
+import com.project.customer.Gender;
 import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,9 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -37,15 +36,16 @@ public class Main {
             Faker faker = new Faker();
             Random rand = new Random();
             String name = faker.name().fullName();
+            int age = rand.nextInt(16, 99);
+            Gender gender = (age % 2 == 0) ? Gender.MALE : Gender.FEMALE;
 
-            Customer c1 = new Customer(rand.nextInt(16, 99),
+            Customer c1 = new Customer(age,
                     name,
-                    name.replaceAll(" ", "_").toLowerCase() + "@gmail.com");
+                    name.replaceAll(" ", "_").toLowerCase() + "@gmail.com",
+                    gender);
 
             customerRepository.save(c1);
         };
-
-
     }
 
     public static void printBeans(ConfigurableApplicationContext ctx){

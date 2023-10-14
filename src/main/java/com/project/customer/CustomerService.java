@@ -28,7 +28,10 @@ public class CustomerService {
         if(customerDAO.emailExists(regRequest.email()))
             throw new DuplicateResource("Customer with %s already exists".formatted(regRequest.email()));
 
-        customerDAO.insertCustomer(new Customer(regRequest.age(), regRequest.name(), regRequest.email()));
+        customerDAO.insertCustomer(new Customer(regRequest.age(),
+                regRequest.name(),
+                regRequest.email(),
+                regRequest.gender()));
     }
 
     public void deleteCustomerById(Integer custId){
@@ -43,7 +46,8 @@ public class CustomerService {
 
         boolean changes = false;
 
-        if(request.name() != null && !request.name().equals(c.getName())){
+        if(request.name().length() != 0 && request.name() != null &&
+                !request.name().equals(c.getName())){
             c.setName(request.name());
             changes = true;
         }
@@ -54,10 +58,15 @@ public class CustomerService {
         }
 
         if(request.email() != null && request.email().equals(c.getEmail())){
-            throw new DuplicateResource("Email already taken");
+            throw new DuplicateResource("Enter a new email ID");
         }
-        else{
+        else if(request.email().length() != 0){
             c.setEmail(request.email());
+            changes = true;
+        }
+
+        if(request.gender() != null && request.gender() != c.getGender()){
+            c.setGender(request.gender());
             changes = true;
         }
 

@@ -2,7 +2,6 @@ package com.project.customer;
 
 import jakarta.persistence.*;
 
-import java.math.BigInteger;
 import java.util.Objects;
 
 @Entity
@@ -35,20 +34,26 @@ public class Customer{
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     public Customer(){}
 
-    public Customer(Integer id, Integer age, String name, String email) {
+    public Customer(Integer id, Integer age, String name, String email, Gender gender) {
         this.id = id;
         this.age = age;
         this.name = name;
         this.email = email;
+        this.gender = gender;
     }
 
-    public Customer(Integer age, String name, String email) {
+    public Customer(Integer age, String name, String email, Gender gender) {
         this.id = id;
         this.age = age;
         this.name = name;
         this.email = email;
+        this.gender = gender;
     }
 
     public Integer getId() {
@@ -83,6 +88,14 @@ public class Customer{
         this.email = email;
     }
 
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -90,6 +103,7 @@ public class Customer{
                 ", age=" + age +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", gender=" + gender +
                 '}';
     }
 

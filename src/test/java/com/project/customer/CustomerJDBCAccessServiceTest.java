@@ -27,8 +27,8 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
         Customer customer = new Customer(
                 23,
                 faker.name().fullName(),
-                faker.internet().safeEmailAddress() + "" + UUID.randomUUID()
-        );
+                faker.internet().safeEmailAddress() + "" + UUID.randomUUID(),
+                Gender.MALE);
         jdbcAccessService.insertCustomer(customer);
 
         List<Customer> customers = jdbcAccessService.selectAllCustomers();
@@ -42,8 +42,8 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
         Customer customer = new Customer(
                 23,
                 faker.name().fullName(),
-                email
-        );
+                email,
+                Gender.MALE);
         jdbcAccessService.insertCustomer(customer);
 
         Integer id = jdbcAccessService.selectAllCustomers()
@@ -82,8 +82,8 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
         Customer customer = new Customer(
                 23,
                 faker.name().fullName(),
-                email
-        );
+                email,
+                Gender.MALE);
         jdbcAccessService.insertCustomer(customer);
 
         boolean existsCustomer = jdbcAccessService.emailExists(email);
@@ -97,8 +97,8 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
         Customer customer = new Customer(
                 23,
                 faker.name().fullName(),
-                email
-        );
+                email,
+                Gender.MALE);
         jdbcAccessService.insertCustomer(customer);
 
         Integer id = jdbcAccessService.selectAllCustomers()
@@ -120,8 +120,8 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
         Customer customer = new Customer(
                 23,
                 faker.name().fullName(),
-                email
-        );
+                email,
+                Gender.MALE);
         jdbcAccessService.insertCustomer(customer);
 
         Integer id = jdbcAccessService.selectAllCustomers()
@@ -142,8 +142,8 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
         Customer customer = new Customer(
                 23,
                 faker.name().fullName(),
-                email
-        );
+                email,
+                Gender.MALE);
         jdbcAccessService.insertCustomer(customer);
 
         Integer id = jdbcAccessService.selectAllCustomers()

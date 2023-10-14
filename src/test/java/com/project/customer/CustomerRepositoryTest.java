@@ -7,11 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -30,8 +28,8 @@ class CustomerRepositoryTest extends AbstractTestContainer {
         Customer customer = new Customer(
                 23,
                 faker.name().fullName(),
-                email
-        );
+                email,
+                Gender.MALE);
         testRepository.save(customer);
 
         boolean c = testRepository.existsCustomersByEmail(email);
@@ -45,8 +43,8 @@ class CustomerRepositoryTest extends AbstractTestContainer {
         Customer customer = new Customer(
                 23,
                 faker.name().fullName(),
-                email
-        );
+                email,
+                Gender.MALE);
         testRepository.save(customer);
 
         Integer id = testRepository.findAll()

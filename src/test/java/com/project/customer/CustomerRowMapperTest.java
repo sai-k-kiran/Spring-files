@@ -20,10 +20,11 @@ class CustomerRowMapperTest {
         when(set.getInt("age")).thenReturn(19);
         when(set.getString("name")).thenReturn("Alex");
         when(set.getString("email")).thenReturn("alex@gmail.com");
+        when(set.getString("gender")).thenReturn("MALE");
 
         Customer c = rowMapper.mapRow(set, 1);
 
-        Customer expectedCustomer = new Customer(1, 19, "Alex", "alex@gmail.com");
+        Customer expectedCustomer = new Customer(1, 19, "Alex", "alex@gmail.com", Gender.MALE);
         assertThat(c).isEqualTo(expectedCustomer); // this will fail unless you have override "equals()" method of
     }                                               // Customer. See Customer.java NOTE 1
 }

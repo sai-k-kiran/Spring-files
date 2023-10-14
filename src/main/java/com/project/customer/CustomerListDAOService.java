@@ -2,7 +2,6 @@ package com.project.customer;
 
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +13,8 @@ public class CustomerListDAOService implements CustomerDAO{
     static {
         customers = new ArrayList<>();
 
-        customers.add(new Customer(1, 21, "Alex", "alex@gmail.com"));
-        customers.add(new Customer(2, 22, "Tom", "tom@gmail.com"));
+        customers.add(new Customer(1, 21, "Alex", "alex@gmail.com", Gender.MALE));
+        customers.add(new Customer(2, 22, "Tom", "tom@gmail.com", Gender.MALE));
     }
 
     @Override

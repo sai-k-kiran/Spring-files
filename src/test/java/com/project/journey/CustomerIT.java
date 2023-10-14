@@ -3,6 +3,7 @@ package com.project.journey;
 import com.project.customer.Customer;
 import com.project.customer.CustomerRegistrationRequest;
 import com.project.customer.CustomerUpdateRequest;
+import com.project.customer.Gender;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,10 @@ public class CustomerIT {
         String name = faker.name().fullName();
         String email = name.toLowerCase().replaceAll(" ", "_") + "@gmail.com";
         int age = RANDOM.nextInt(1, 100);
+        Gender gender = (age % 2 == 0) ? Gender.MALE : Gender.FEMALE;
 
         CustomerRegistrationRequest request =
-                new CustomerRegistrationRequest(name, age, email);
+                new CustomerRegistrationRequest(name, age, email, gender);
 
 
         webTestClient.post()
@@ -56,7 +58,7 @@ public class CustomerIT {
                 .returnResult()
                 .getResponseBody();
 
-        Customer expected  = new Customer(age, name, email);
+        Customer expected  = new Customer(age, name, email, gender);
 
         assertThat(response)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
@@ -88,9 +90,10 @@ public class CustomerIT {
         String name = faker.name().fullName();
         String email = name.toLowerCase().replaceAll(" ", "_") + "@gmail.com";
         int age = RANDOM.nextInt(1, 100);
+        Gender gender = (age % 2 == 0) ? Gender.MALE : Gender.FEMALE;
 
         CustomerRegistrationRequest request =
-                new CustomerRegistrationRequest(name, age, email);
+                new CustomerRegistrationRequest(name, age, email, gender);
 
 
         webTestClient.post()
@@ -140,9 +143,10 @@ public class CustomerIT {
         String name = faker.name().fullName();
         String email = name.toLowerCase().replaceAll(" ", "_") + "@gmail.com";
         int age = RANDOM.nextInt(1, 100);
+        Gender gender = (age % 2 == 0) ? Gender.MALE : Gender.FEMALE;
 
         CustomerRegistrationRequest request =
-                new CustomerRegistrationRequest(name, age, email);
+                new CustomerRegistrationRequest(name, age, email, gender);
 
 
         webTestClient.post()
@@ -192,7 +196,7 @@ public class CustomerIT {
                 .expectBody(Customer.class)
                 .returnResult()
                 .getResponseBody();
-        Customer expected = new Customer(id, age, newName, email);
+        Customer expected = new Customer(id, age, newName, email, gender);
 
         assertThat(updatedCustomer).isEqualTo(expected);
     }

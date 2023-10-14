@@ -2,21 +2,16 @@ package com.project.customer;
 
 import com.project.Exception.DuplicateResource;
 import com.project.Exception.ResourceNotFound;
-import com.project.Exception.ResourceValidationException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class) // if you dont want to write autocloseable = MockitoAnnot...
@@ -40,7 +35,7 @@ class CustomerServiceTest {
     @Test
     void getCustomerById() {
         int id = 1;
-        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com");
+        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com", Gender.MALE);
         when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(c));
 
         Customer test = underTest.getCustomerById(id);
@@ -65,7 +60,7 @@ class CustomerServiceTest {
         when(customerDAO.emailExists(email)).thenReturn(false);
 
         CustomerRegistrationRequest request =
-                        new CustomerRegistrationRequest("alex", 27, email);
+                        new CustomerRegistrationRequest("alex", 27, email, Gender.MALE);
 
         underTest.addCustomer(request);
 
@@ -88,7 +83,7 @@ class CustomerServiceTest {
         when(customerDAO.emailExists(email)).thenReturn(true);
 
         CustomerRegistrationRequest request =
-                new CustomerRegistrationRequest("alex", 27, email);
+                new CustomerRegistrationRequest("alex", 27, email, Gender.MALE);
 
         assertThatThrownBy(() -> underTest.addCustomer(request))
                 .isInstanceOf(DuplicateResource.class)
@@ -123,7 +118,7 @@ class CustomerServiceTest {
     @Test
     void updateCustomer() {
         int id = 1;
-        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com");
+        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com", Gender.MALE);
         when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(c));
 
         CustomerUpdateRequest request = new CustomerUpdateRequest("Tom", 24,"tom@gmail.com");
@@ -144,7 +139,7 @@ class CustomerServiceTest {
     @Test
     void updateCustomerName() {
         int id = 1;
-        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com");
+        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com", Gender.MALE);
         when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(c));
 
         CustomerUpdateRequest request = new CustomerUpdateRequest("Tom", null,null);
@@ -165,7 +160,7 @@ class CustomerServiceTest {
     @Test
     void updateCustomerAge() {
         int id = 1;
-        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com");
+        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com", Gender.MALE);
         when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(c));
 
         CustomerUpdateRequest request = new CustomerUpdateRequest(null, 24,null);
@@ -186,7 +181,7 @@ class CustomerServiceTest {
     @Test
     void updateCustomerEmail() {
         int id = 1;
-        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com");
+        Customer c = new Customer(id, 23, "Alex", "alex@hmail.com", Gender.MALE);
         when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(c));
 
         CustomerUpdateRequest request = new CustomerUpdateRequest(null, null,"tom@gmail.com");

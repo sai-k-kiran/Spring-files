@@ -18,7 +18,7 @@ public class CustomerJDBCAccessService implements CustomerDAO{
     @Override
     public List<Customer> selectAllCustomers() {
         var sql = """
-                Select id, name, email, age from customer;
+                Select id, name, email, age, gender from customer;
                 """;
 
         return jdbcTemplate.query(sql, customerRowMapper);
@@ -27,7 +27,7 @@ public class CustomerJDBCAccessService implements CustomerDAO{
     @Override
     public Optional<Customer> selectCustomerById(Integer custId) {
          var sql = """
-                 Select id, name, email, age from customer where id = ?;
+                 Select id, name, email, age, gender from customer where id = ?;
                  """;
         return jdbcTemplate.query(sql, customerRowMapper, custId)
                 .stream()
@@ -37,10 +37,10 @@ public class CustomerJDBCAccessService implements CustomerDAO{
     @Override
     public void insertCustomer(Customer customer) {
         var sql = """
-                INSERT INTO customer(age, name, email) VALUES(?, ?, ?)
+                INSERT INTO customer(age, name, email, gender) VALUES(?, ?, ?, ?)
                 """;
         jdbcTemplate.update(sql,
-                customer.getAge(), customer.getName(), customer.getEmail());
+                customer.getAge(), customer.getName(), customer.getEmail(), customer.getGender().name() );
     }
 
 
@@ -97,6 +97,14 @@ public class CustomerJDBCAccessService implements CustomerDAO{
                     update.getEmail(),
                     update.getId());
             System.out.println("update customer email result = " + result);
+        }
+        if (update.getGender() != null) {
+            String sql = "UPDATE customer SET gender = ? WHERE id = ?";
+            int result = jdbcTemplate.update(
+                    sql,
+                    update.getGender().name(),
+                    update.getId());
+            System.out.println("update customer gender result = " + result);
         }
     }
 }
