@@ -9,11 +9,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 @SpringBootApplication
 public class Main {
@@ -31,7 +33,7 @@ public class Main {
     }
 
     @Bean
-    CommandLineRunner runner(CustomerRepository customerRepository){
+    CommandLineRunner runner(CustomerRepository customerRepository, PasswordEncoder passwordEncoder){
         return args -> {
             Faker faker = new Faker();
             Random rand = new Random();
@@ -42,7 +44,7 @@ public class Main {
             Customer c1 = new Customer(age,
                     name,
                     name.replaceAll(" ", "_").toLowerCase() + "@gmail.com",
-                    gender);
+                    gender, passwordEncoder.encode(UUID.randomUUID().toString()));
 
             customerRepository.save(c1);
         };
@@ -54,13 +56,6 @@ public class Main {
         for(String bean : beans) {
             System.out.println(bean);
         }
-    }
-
-    record Foo(String name){}
-
-    @Bean  // Bean of object "Foo" is created in app context
-    public Foo getFoo(){
-        return new Foo("Bar");
     }
 
     @GetMapping("/greet")

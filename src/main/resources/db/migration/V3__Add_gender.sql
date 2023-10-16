@@ -1,2 +1,0 @@
-ALTER TABLE customer
-ADD COLUMN gender VARCHAR(6) NOT NULL;

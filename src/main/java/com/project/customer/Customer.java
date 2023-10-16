@@ -1,7 +1,12 @@
 package com.project.customer;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -11,7 +16,7 @@ import java.util.Objects;
                 @UniqueConstraint(name = "customer_email_unique", columnNames = "email")
         }
 )
-public class Customer{
+public class Customer implements UserDetails {
     @Id // primary key
     @SequenceGenerator(
             name = "customer_id_sequence",
@@ -38,22 +43,27 @@ public class Customer{
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(nullable = false)
+    private String password;
+
     public Customer(){}
 
-    public Customer(Integer id, Integer age, String name, String email, Gender gender) {
+    public Customer(Integer id, Integer age, String name, String email, Gender gender, String password) {
         this.id = id;
         this.age = age;
         this.name = name;
         this.email = email;
         this.gender = gender;
+        this.password = password;
     }
 
-    public Customer(Integer age, String name, String email, Gender gender) {
+    public Customer(Integer age, String name, String email, Gender gender, String password) {
         this.id = id;
         this.age = age;
         this.name = name;
         this.email = email;
         this.gender = gender;
+        this.password = password;
     }
 
     public Integer getId() {
@@ -118,5 +128,40 @@ public class Customer{
     @Override
     public int hashCode() {
         return Objects.hash(id, age, name, email);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

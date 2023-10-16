@@ -28,7 +28,7 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
                 23,
                 faker.name().fullName(),
                 faker.internet().safeEmailAddress() + "" + UUID.randomUUID(),
-                Gender.MALE);
+                Gender.MALE, "password");
         jdbcAccessService.insertCustomer(customer);
 
         List<Customer> customers = jdbcAccessService.selectAllCustomers();
@@ -43,7 +43,7 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
                 23,
                 faker.name().fullName(),
                 email,
-                Gender.MALE);
+                Gender.MALE, "password");
         jdbcAccessService.insertCustomer(customer);
 
         Integer id = jdbcAccessService.selectAllCustomers()
@@ -83,7 +83,7 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
                 23,
                 faker.name().fullName(),
                 email,
-                Gender.MALE);
+                Gender.MALE, "password");
         jdbcAccessService.insertCustomer(customer);
 
         boolean existsCustomer = jdbcAccessService.emailExists(email);
@@ -98,7 +98,7 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
                 23,
                 faker.name().fullName(),
                 email,
-                Gender.MALE);
+                Gender.MALE, "password");
         jdbcAccessService.insertCustomer(customer);
 
         Integer id = jdbcAccessService.selectAllCustomers()
@@ -121,7 +121,7 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
                 23,
                 faker.name().fullName(),
                 email,
-                Gender.MALE);
+                Gender.MALE, "password");
         jdbcAccessService.insertCustomer(customer);
 
         Integer id = jdbcAccessService.selectAllCustomers()
@@ -143,7 +143,7 @@ class CustomerJDBCAccessServiceTest extends AbstractTestContainer {
                 23,
                 faker.name().fullName(),
                 email,
-                Gender.MALE);
+                Gender.MALE, "password");
         jdbcAccessService.insertCustomer(customer);
 
         Integer id = jdbcAccessService.selectAllCustomers()

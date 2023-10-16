@@ -36,7 +36,7 @@ public class CustomerIT {
         Gender gender = (age % 2 == 0) ? Gender.MALE : Gender.FEMALE;
 
         CustomerRegistrationRequest request =
-                new CustomerRegistrationRequest(name, age, email, gender);
+                new CustomerRegistrationRequest(name, age, email, gender, "password");
 
 
         webTestClient.post()
@@ -58,7 +58,7 @@ public class CustomerIT {
                 .returnResult()
                 .getResponseBody();
 
-        Customer expected  = new Customer(age, name, email, gender);
+        Customer expected  = new Customer(age, name, email, gender, "password");
 
         assertThat(response)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
@@ -93,7 +93,7 @@ public class CustomerIT {
         Gender gender = (age % 2 == 0) ? Gender.MALE : Gender.FEMALE;
 
         CustomerRegistrationRequest request =
-                new CustomerRegistrationRequest(name, age, email, gender);
+                new CustomerRegistrationRequest(name, age, email, gender, "password");
 
 
         webTestClient.post()
@@ -146,7 +146,7 @@ public class CustomerIT {
         Gender gender = (age % 2 == 0) ? Gender.MALE : Gender.FEMALE;
 
         CustomerRegistrationRequest request =
-                new CustomerRegistrationRequest(name, age, email, gender);
+                new CustomerRegistrationRequest(name, age, email, gender, "password");
 
 
         webTestClient.post()
@@ -176,7 +176,8 @@ public class CustomerIT {
                 .orElseThrow();
 
         String newName = "Tom";
-        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(newName, null, null);
+        CustomerUpdateRequest updateRequest =
+                new CustomerUpdateRequest(newName, null, null, null);
 
         webTestClient.put()
                 .uri(CUSTOMER_URI + "/{id}", id)
@@ -196,7 +197,7 @@ public class CustomerIT {
                 .expectBody(Customer.class)
                 .returnResult()
                 .getResponseBody();
-        Customer expected = new Customer(id, age, newName, email, gender);
+        Customer expected = new Customer(id, age, newName, email, gender, "password");
 
         assertThat(updatedCustomer).isEqualTo(expected);
     }

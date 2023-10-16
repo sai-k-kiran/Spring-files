@@ -22,6 +22,10 @@ public class CustomerJPADataAccessService implements CustomerDAO{
         return customerRepository.findById(custId);
     }
     @Override
+    public Optional<Customer> selectUserByEmail(String email){
+        return customerRepository.findUserByEmail(email);
+    }
+    @Override
     public void insertCustomer(Customer customer){
         customerRepository.save(customer);
     }

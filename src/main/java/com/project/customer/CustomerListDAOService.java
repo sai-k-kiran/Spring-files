@@ -13,8 +13,8 @@ public class CustomerListDAOService implements CustomerDAO{
     static {
         customers = new ArrayList<>();
 
-        customers.add(new Customer(1, 21, "Alex", "alex@gmail.com", Gender.MALE));
-        customers.add(new Customer(2, 22, "Tom", "tom@gmail.com", Gender.MALE));
+        customers.add(new Customer(1, 21, "Alex", "alex@gmail.com", Gender.MALE, "password"));
+        customers.add(new Customer(2, 22, "Tom", "tom@gmail.com", Gender.MALE, "password"));
     }
 
     @Override
@@ -26,6 +26,13 @@ public class CustomerListDAOService implements CustomerDAO{
     public Optional<Customer> selectCustomerById(Integer custId){
         return customers.stream()
                 .filter(c -> c.getId().equals(custId))
+                .findFirst();
+    }
+
+    @Override
+    public Optional<Customer> selectUserByEmail(String email){
+        return customers.stream()
+                .filter(c -> c.getEmail().equals(email))
                 .findFirst();
     }
     @Override
