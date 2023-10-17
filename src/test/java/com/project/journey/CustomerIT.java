@@ -1,14 +1,12 @@
 package com.project.journey;
 
-import com.project.customer.Customer;
-import com.project.customer.CustomerRegistrationRequest;
-import com.project.customer.CustomerUpdateRequest;
-import com.project.customer.Gender;
+import com.project.customer.*;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -25,7 +23,7 @@ public class CustomerIT {
     @Autowired
     private WebTestClient webTestClient;
     private static final Random RANDOM = new Random();
-    private static final String CUSTOMER_URI = "/api/v1/customers";
+    private static final String CUSTOMER_PATH = "/api/v1/customers";
 
     @Test
     void canRegisterCustomer() {
@@ -38,46 +36,57 @@ public class CustomerIT {
         CustomerRegistrationRequest request =
                 new CustomerRegistrationRequest(name, age, email, gender, "password");
 
-
-        webTestClient.post()
-                .uri(CUSTOMER_URI)
+        String JWTtoken = webTestClient.post()
+                .uri(CUSTOMER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), CustomerRegistrationRequest.class)
                 .exchange()
                 .expectStatus()
-                .isOk();
+                .isOk()
+                .returnResult(Void.class)
+                .getResponseHeaders()
+                .get(HttpHeaders.AUTHORIZATION)
+                .get(0);
 
-        List<Customer> response = webTestClient.get()
-                .uri(CUSTOMER_URI)
+        List<CustomerDTO> response = webTestClient.get()
+                .uri(CUSTOMER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", JWTtoken))
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(new ParameterizedTypeReference<Customer>() {})
+                .expectBodyList(new ParameterizedTypeReference<CustomerDTO>() {})
                 .returnResult()
                 .getResponseBody();
 
-        Customer expected  = new Customer(age, name, email, gender, "password");
-
-        assertThat(response)
-                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
-                .contains(expected);
-
         int id = response.stream()
-                        .filter(c -> c.getEmail().equals(email))
-                        .map(Customer :: getId)
-                        .findFirst()
-                        .orElseThrow();
-        expected.setId(id);
+                .filter(c -> c.email().equals(email))
+                .map(CustomerDTO :: id)
+                .findFirst()
+                .orElseThrow();
 
-        Customer actual = webTestClient.get()
-                .uri(CUSTOMER_URI + "/{id}", id)
+        CustomerDTO expected  = new CustomerDTO(
+                id,
+                name,
+                age,
+                email,
+                gender,
+                List.of("ROLE_USER"),
+                email
+        );
+
+        assertThat(response).contains(expected);
+
+
+        CustomerDTO actual = webTestClient.get()
+                .uri(CUSTOMER_PATH + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", JWTtoken))
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<Customer>() {})
+                .expectBody(new ParameterizedTypeReference<CustomerDTO>() {})
                 .returnResult()
                 .getResponseBody();
 
@@ -95,9 +104,11 @@ public class CustomerIT {
         CustomerRegistrationRequest request =
                 new CustomerRegistrationRequest(name, age, email, gender, "password");
 
+        CustomerRegistrationRequest request2 =
+                new CustomerRegistrationRequest(name, age, email + ".in", gender, "password");
 
-        webTestClient.post()
-                .uri(CUSTOMER_URI)
+        webTestClient.post() // customer to be deleted
+                .uri(CUSTOMER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), CustomerRegistrationRequest.class)
@@ -105,33 +116,49 @@ public class CustomerIT {
                 .expectStatus()
                 .isOk();
 
-        List<Customer> response = webTestClient.get()
-                .uri(CUSTOMER_URI)
+        String JWTtoken = webTestClient.post()
+                .uri(CUSTOMER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(request2), CustomerRegistrationRequest.class)
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(new ParameterizedTypeReference<Customer>() {})
+                .returnResult(Void.class)
+                .getResponseHeaders()
+                .get(HttpHeaders.AUTHORIZATION)
+                .get(0);
+
+        List<CustomerDTO> response = webTestClient.get()
+                .uri(CUSTOMER_PATH)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s",JWTtoken))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(new ParameterizedTypeReference<CustomerDTO>() {})
                 .returnResult()
                 .getResponseBody();
 
 
         int id = response.stream()
-                .filter(c -> c.getEmail().equals(email))
-                .map(Customer :: getId)
+                .filter(c -> c.email().equals(email))
+                .map(CustomerDTO :: id)
                 .findFirst()
                 .orElseThrow();
 
         webTestClient.delete()
-                .uri(CUSTOMER_URI + "/{id}", id)
+                .uri(CUSTOMER_PATH + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s",JWTtoken))
                 .exchange()
                 .expectStatus()
                 .isOk();
 
         webTestClient.get()
-                .uri(CUSTOMER_URI + "/{id}", id)
+                .uri(CUSTOMER_PATH + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s",JWTtoken))
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -149,29 +176,34 @@ public class CustomerIT {
                 new CustomerRegistrationRequest(name, age, email, gender, "password");
 
 
-        webTestClient.post()
-                .uri(CUSTOMER_URI)
+        String JWTtoken = webTestClient.post()
+                .uri(CUSTOMER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), CustomerRegistrationRequest.class)
                 .exchange()
                 .expectStatus()
-                .isOk();
+                .isOk()
+                .returnResult(Void.class)
+                .getResponseHeaders()
+                .get(HttpHeaders.AUTHORIZATION)
+                .get(0);
 
-        List<Customer> response = webTestClient.get()
-                .uri(CUSTOMER_URI)
+        List<CustomerDTO> response = webTestClient.get()
+                .uri(CUSTOMER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", JWTtoken))
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(new ParameterizedTypeReference<Customer>() {})
+                .expectBodyList(new ParameterizedTypeReference<CustomerDTO>() {})
                 .returnResult()
                 .getResponseBody();
 
 
         int id = response.stream()
-                .filter(c -> c.getEmail().equals(email))
-                .map(Customer :: getId)
+                .filter(c -> c.email().equals(email))
+                .map(CustomerDTO :: id)
                 .findFirst()
                 .orElseThrow();
 
@@ -180,24 +212,26 @@ public class CustomerIT {
                 new CustomerUpdateRequest(newName, null, null, null);
 
         webTestClient.put()
-                .uri(CUSTOMER_URI + "/{id}", id)
+                .uri(CUSTOMER_PATH + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s",JWTtoken))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(updateRequest), CustomerUpdateRequest.class)
                 .exchange()
                 .expectStatus()
                 .isOk();
 
-        Customer updatedCustomer = webTestClient.get()
-                .uri(CUSTOMER_URI + "/{id}", id)
+        CustomerDTO updatedCustomer = webTestClient.get()
+                .uri(CUSTOMER_PATH + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s",JWTtoken))
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(Customer.class)
+                .expectBody(CustomerDTO.class)
                 .returnResult()
                 .getResponseBody();
-        Customer expected = new Customer(id, age, newName, email, gender, "password");
+        CustomerDTO expected = new CustomerDTO(id, newName, age, email, gender, List.of("ROLE_USER"), email);
 
         assertThat(updatedCustomer).isEqualTo(expected);
     }

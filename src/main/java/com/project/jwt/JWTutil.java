@@ -10,6 +10,7 @@ import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -27,11 +28,15 @@ public class JWTutil {
         return issueToken(subject, Map.of("scopes", scopes));
     }
 
+    public String issueToken(String subject, List<String> list){
+        return issueToken(subject, Map.of("scopes", list));
+    }
+
     public String issueToken(String subject, Map<String, Object> claims){
         String JWTtoken = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
-                .setIssuer("htts:saik.com   ")
+                .setIssuer("https:saik.com")
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(
                         Date.from(Instant.now().plus(10, ChronoUnit.DAYS))
