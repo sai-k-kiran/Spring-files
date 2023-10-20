@@ -3,10 +3,17 @@ package com.project.customer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import static org.mockito.Mockito.verify;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 class CustomerJPADataAccessServiceTest {
     private CustomerJPADataAccessService underTest;
@@ -27,9 +34,18 @@ class CustomerJPADataAccessServiceTest {
 
     @Test
     void selectAllCustomers() {
-        underTest.selectAllCustomers();
+        Page<Customer> page = mock(Page.class);
+        List<Customer> customers = List.of(new Customer());
+        when(page.getContent()).thenReturn(customers);
 
-        verify(customerRepository).findAll();
+        when(customerRepository.findAll(any(Pageable.class))).thenReturn(page);
+
+        List<Customer> expected = underTest.selectAllCustomers();
+
+        assertThat(expected).isEqualTo(customers);
+        ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
+        verify(customerRepository).findAll(captor.capture());
+        assertThat(captor.getValue()).isEqualTo(Pageable.ofSize(10));
     }
 
     @Test
